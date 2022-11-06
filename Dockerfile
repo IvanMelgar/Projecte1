@@ -1,8 +1,8 @@
 #Para importar la imagen ubuntu, utilizamos FROM
-FROM ubuntu:22.04:
+FROM ubuntu:22.04
 
 #El creador y mantenedor de este Dockerfile
-MAINTANER Ivan Melgar imelgar21@ilg.cat
+MAINTAINER Ivan Melgar imelgar21@ilg.cat
 
 
 #Actualizamos el sistema ubuntu con update y upgrade para aplicar actualización
