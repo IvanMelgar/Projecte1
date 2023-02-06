@@ -1,31 +1,22 @@
 #Para importar la imagen ubuntu, utilizamos FROM
 FROM ubuntu:22.04
-
+ENV DEBIAN_FRONTED=noninteractive
 #El creador y mantenedor de este Dockerfile
 MAINTAINER Ivan Melgar imelgar21@ilg.cat
 
+#Actualización de los repositorios.
+RUN apt-get update && apt-get -y upgrade
 
-#Actualizamos el sistema ubuntu con update y upgrade para aplicar actualización
-RUN apt-get update  && apt-get -y upgrade
-#Ahora instalamos el Python de la siguiente manera
-RUN apt-get install -y python3.10
-#Instalar Apache2
-RUN apt-get install -y apache2
-#Instalacion SSH
-RUN apt-get install -y openssh-server
-#Instalación mysql servidor base de datos
-RUN apt-get install -y mysql-server
+#Instación de los servicios: apache mysql y openssh
+RUN apt-get install -y apache2 supervisor python3.10 mysql-server openssh-server
 
-
-#Creacion de directorios para los servicios
+#Creacion de los directorios para los servicios; apache2,ssh,supervisor:
 RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
 
+#Ahora exponemos los puertos: 80,443:apache2; 9001:supervisor; 3306:mysql; 22:ssh
+EXPOSE 80 443 9001 3306 22
 
-#Ahora se copiara el fichero de supervisor al directorio en Ubuntu
+
+#Copiamos el fichero de supervisor al directorio dentro de ubuntu:
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-
-#Puertos a exponer Apache2:80,443, Supervisor:9001, SSH:22, Mysql:3306
-EXPOSE 22 80 443 3306 9001
-
 CMD ["/usr/bin/supervisord","-n"]
